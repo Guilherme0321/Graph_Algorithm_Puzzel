@@ -12,9 +12,10 @@ namespace graph_algorithm.Support {
         private Tuple<int, int> pos;
         private T id;
         private int length;
-        private char direction;
+        private Direction direction;
+        private bool isObstacle;
 
-        public Veiculo(T id,int x, int y, int length, char direction)
+        public Veiculo(T id,int x, int y, int length, Direction direction)
         {
             this.pos = Tuple.Create(x, y);
             this.length = length;
@@ -32,11 +33,48 @@ namespace graph_algorithm.Support {
         public Tuple<int, int> Position { get {  return this.pos; } set { pos = value; } }
         public T Id { get { return this.id; } }
 
-        public char Diretion { get { return this.direction; } set { this.direction = value; } }
+        public Direction Diretion { get { return this.direction; } set { this.direction = value; } }
+
+        public bool IsObstacle { get {  return this.isObstacle; } set { this.isObstacle = value; } }
 
         public bool EqualsPosition(Veiculo<T> obj)
         {
             return this.pos.Item1 == obj.pos.Item1 && this.pos.Item2 == obj.pos.Item2;
+        }
+
+        public bool HadColision(Veiculo<T> v2)
+        {
+            if (this.Diretion == Direction.Vertical)
+            {
+                for (int i = 0; i < this.Length; i++)
+                {
+                    for (int j = 0; j < v2.Length; j++)
+                    {
+                        int Xv2 = v2.Position.Item1 + (v2.Diretion == Direction.Vertical ? j : 0);
+                        int Yv2 = v2.Position.Item2 + (v2.Diretion == Direction.Horizontal ? j : 0);
+                        if (this.Position.Item1 + i == Xv2 && this.Position.Item2 == Yv2)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < this.Length; i++)
+                {
+                    for (int j = 0; j < v2.Length; j++)
+                    {
+                        int Xv2 = v2.Position.Item1 + (v2.Diretion == Direction.Vertical ? j : 0);
+                        int Yv2 = v2.Position.Item2 + (v2.Diretion == Direction.Horizontal ? j : 0);
+                        if (this.Position.Item1 == Xv2 && this.Position.Item2 + i == Yv2)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public override string ToString()
