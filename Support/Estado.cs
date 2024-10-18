@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace graph_algorithm.Support
 {
-    enum Direction
+    public enum Direction
     {
-        Vertical = 'v',
-        Horizontal = 'h'
+        Vertical,
+        Horizontal
     }
 
     class Estado<T>
@@ -33,7 +33,14 @@ namespace graph_algorithm.Support
             this.edges = new List<Tuple<int, Estado<T>>>();
         }
 
-        public bool Equals(Estado<T> obj)
+        public Estado(List<Veiculo<T>> list)
+        {
+            this.veiculos = new List<Veiculo<T>>(list);
+            this.moved_veiculo = null;
+            this.edges = new List<Tuple<int, Estado<T>>>();
+        }
+
+        private bool Equals(Estado<T> obj)
         {
             if(obj == null) return false;
             for(int i = 0; i < this.veiculos.Count; i++) 
