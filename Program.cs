@@ -7,9 +7,17 @@ namespace graph_algorithm
     {
         static void Main(string[] args)
         {
-            Veiculo<int> veiculo = new Veiculo<int>(1, 2, 3, 2, Direction.Horizontal);
-            Console.WriteLine(veiculo);
-            Console.WriteLine(veiculo.Diretion == Direction.Vertical);
+            Veiculo<int> veiculo = new Veiculo<int>(1, 2, 3, 2, Direction.Horizontal, false);
+            List<Veiculo<int>> list = new List<Veiculo<int>>();
+            list.Add(veiculo);
+            Estado<int> estado = new Estado<int>(list);
+
+            List<Veiculo<int>> list2 = new List<Veiculo<int>>();
+            Veiculo<int> tmp = veiculo.Clone();
+            tmp.Position = Tuple.Create(2,4);
+            list2.Add(tmp);
+            Estado<int> estado2 = new Estado<int>(list2);
+            Console.WriteLine(estado == estado2);
         }
     }
 
