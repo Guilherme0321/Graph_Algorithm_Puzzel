@@ -15,12 +15,13 @@ namespace graph_algorithm.Support {
         private Direction direction;
         private bool isObstacle;
 
-        public Veiculo(T id,int x, int y, int length, Direction direction)
+        public Veiculo(T id,int x, int y, int length, Direction direction, bool isObstacle)
         {
             this.pos = Tuple.Create(x, y);
             this.length = length;
             this.id = id;
             this.direction = direction;
+            this.isObstacle = isObstacle;
         }
 
         public Veiculo()
@@ -28,6 +29,7 @@ namespace graph_algorithm.Support {
             this.pos = Tuple.Create(0, 0);
             this.length = 0;
         }
+
 
         public int Length { get { return this.length; } set { length = value; } }
         public Tuple<int, int> Position { get {  return this.pos; } set { pos = value; } }
@@ -75,6 +77,10 @@ namespace graph_algorithm.Support {
                 }
             }
             return false;
+        }
+        public Veiculo<T> Clone()
+        {
+            return new Veiculo<T>(id, pos.Item1, pos.Item2, length, direction, isObstacle);
         }
 
         public override string ToString()
