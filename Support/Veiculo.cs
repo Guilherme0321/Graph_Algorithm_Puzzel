@@ -43,6 +43,48 @@ namespace graph_algorithm.Support {
         {
             return this.pos.Item1 == obj.pos.Item1 && this.pos.Item2 == obj.pos.Item2;
         }
+        public enum MoveVertical
+        {
+            Cima,
+            Baixo
+        }
+
+        public enum MoveHorizontal
+        {
+            Esquerda,
+            Direita
+        }
+
+        public void MoveHorizontally(int movimentacao, MoveHorizontal direcao) //movimentacao é a quantidade de quadradinhos q o jogador escolheu movimentar o carro
+        {
+            int x = pos.Item1;
+            int y = pos.Item2;
+            if(direcao == MoveHorizontal.Esquerda)
+            {
+                y -= movimentacao;
+            }
+            else if(direcao == MoveHorizontal.Direita){
+                y += movimentacao;
+            }
+            this.pos = Tuple.Create(x,y);
+        }
+
+        public void MoveVertically(int movimentacao, MoveVertical direcao)
+        {
+            int x = pos.Item1;
+            int y = pos.Item2;
+            if(direcao == MoveVertical.Cima)
+            {
+                x -= movimentacao;
+            }
+            else if (direcao == MoveVertical.Baixo)
+            {
+                x += movimentacao;
+            }
+            this.pos = Tuple.Create(x,y);
+        }
+
+
 
         public bool HadColision(Veiculo<T> v2)
         {

@@ -7,17 +7,32 @@ namespace graph_algorithm
     {
         static void Main(string[] args)
         {
-            Veiculo<int> veiculo = new Veiculo<int>(1, 2, 3, 2, Direction.Horizontal, false);
-            List<Veiculo<int>> list = new List<Veiculo<int>>();
-            list.Add(veiculo);
-            Estado<int> estado = new Estado<int>(list);
+            // Criação de veículos para o estado inicial
+            Veiculo<int> v1 = new Veiculo<int>(1, 0, 0, 2, Direction.Horizontal, false); 
+            Veiculo<int> v2 = new Veiculo<int>(2, 1, 0, 3, Direction.Vertical, false); 
+            Veiculo<int> v3 = new Veiculo<int>(3, 0, 1, 2, Direction.Horizontal, true); // obstáculo
 
-            List<Veiculo<int>> list2 = new List<Veiculo<int>>();
-            Veiculo<int> tmp = veiculo.Clone();
-            tmp.Position = Tuple.Create(2,4);
-            list2.Add(tmp);
-            Estado<int> estado2 = new Estado<int>(list2);
-            Console.WriteLine(estado == estado2);
+            // Criação do estado inicial
+            List<Veiculo<int>> initialVehicles = new List<Veiculo<int>>() { v1, v2, v3 };
+            Estado<int> initialState = new Estado<int>(initialVehicles);
+
+            // Movendo o veículo 1 para a direita
+            v1.MoveHorizontally(1, Veiculo<int>.MoveHorizontal.Direita);
+
+            // Criação do novo estado após mover o veículo 1
+            List<Veiculo<int>> movedVehicles = new List<Veiculo<int>>() { v1, v2, v3 };
+            Estado<int> movedState = new Estado<int>(v1, movedVehicles);
+
+            // Verificando se houve colisão após mover o veículo 1
+            foreach (Veiculo<int> vehicle in movedState.Veiculos)
+            {
+                if (vehicle != v1 && v1.HadColision(vehicle))
+                {
+                    Console.WriteLine($"O veículo {v1.Id} colidiu com o veículo {vehicle.Id}");
+                }
+            }
+
+
         }
     }
 
