@@ -5,7 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace graph_algorithm.Support { 
+namespace graph_algorithm.Support {
+    public enum MoveVertical
+    {
+        Cima,
+        Baixo
+    }
+
+    public enum MoveHorizontal
+    {
+        Esquerda,
+        Direita
+    }
 
     public class Veiculo<T>
     {
@@ -43,45 +54,17 @@ namespace graph_algorithm.Support {
         {
             return this.pos.Item1 == obj.pos.Item1 && this.pos.Item2 == obj.pos.Item2;
         }
-        public enum MoveVertical
+
+        public Veiculo<T> MoveHorizontally(int movimentacao, MoveHorizontal direcao)
         {
-            Cima,
-            Baixo
+            int y = pos.Item2 + (direcao == MoveHorizontal.Esquerda ? -movimentacao : movimentacao);
+            return new Veiculo<T>(this.id, this.pos.Item1, y, this.length, this.direction, this.IsObstacle);
         }
 
-        public enum MoveHorizontal
+        public Veiculo<T> MoveVertically(int movimentacao, MoveVertical direcao)
         {
-            Esquerda,
-            Direita
-        }
-
-        public void MoveHorizontally(int movimentacao, MoveHorizontal direcao) //movimentacao é a quantidade de quadradinhos q o jogador escolheu movimentar o carro
-        {
-            int x = pos.Item1;
-            int y = pos.Item2;
-            if(direcao == MoveHorizontal.Esquerda)
-            {
-                y -= movimentacao;
-            }
-            else if(direcao == MoveHorizontal.Direita){
-                y += movimentacao;
-            }
-            this.pos = Tuple.Create(x,y);
-        }
-
-        public void MoveVertically(int movimentacao, MoveVertical direcao)
-        {
-            int x = pos.Item1;
-            int y = pos.Item2;
-            if(direcao == MoveVertical.Cima)
-            {
-                x -= movimentacao;
-            }
-            else if (direcao == MoveVertical.Baixo)
-            {
-                x += movimentacao;
-            }
-            this.pos = Tuple.Create(x,y);
+            int x = pos.Item1 + (direcao == MoveVertical.Cima ? -movimentacao : movimentacao);
+            return new Veiculo<T>(this.id, x, this.pos.Item2, this.length, this.direction, this.IsObstacle);
         }
 
         public Boolean LeftMatrix(Tuple<int, int> position, int numberOfColumns, int numberOfLines)
