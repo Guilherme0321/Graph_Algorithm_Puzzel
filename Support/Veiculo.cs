@@ -84,7 +84,15 @@ namespace graph_algorithm.Support {
             this.pos = Tuple.Create(x,y);
         }
 
+        public Boolean LeftMatrix(Tuple<int, int> position, int numberOfColumns, int numberOfLines)
+        {
+            int x = position.Item1;
+            int y = position.Item2;
 
+            if (x < 0 || y == 0) return true;
+            if (x > numberOfLines - 1|| y > numberOfColumns - 1) return true;
+            return false;
+        }
 
         public bool HadColision(Veiculo<T> v2)
         {
