@@ -216,10 +216,6 @@ namespace graph_algorithm
                 }
 
                 // Verifica se o estado atual é o estado final
-                if (estadoAtual.Veiculos.Any(v => v.Position.Equals(posicaoSaida)))
-                {
-                    return estadoAtual; // Retorna o estado final encontrado
-                }
 
                 // Gera os estados vizinhos e adiciona à fila de prioridade
                 foreach (Veiculo<T> veiculo in estadoAtual.Veiculos)
