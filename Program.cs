@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using graph_algorithm.Support;
 
 namespace graph_algorithm
@@ -32,8 +33,12 @@ namespace graph_algorithm
             Estado<int> movedState = new Estado<int>(movedVehicles);
 
             Graph<int> graph = new Graph<int>(movedVehicles, movedVehicles[1], new Tuple<int, int>(2, 9));
-
-
+            graph.GerarGrafo();
+            Estado<int> estadofinal = graph.BuscaGulosa();
+            foreach (Veiculo<int> item in estadofinal.Veiculos)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 
@@ -120,7 +125,7 @@ namespace graph_algorithm
         private bool IsMovimentoValido(Veiculo<T> veiculo, List<Veiculo<T>> outrosVeiculos)
         {
             // Verifica se a nova posição do veículo é válida (não sai da matriz, não colide com outros veículos)
-            if (veiculo.LeftMatrix(veiculo.Position, /* número de colunas */, /* número de linhas */))
+            if (veiculo.LeftMatrix(veiculo.Position, 10, 6))
             {
                 return false;
             }
@@ -148,6 +153,7 @@ namespace graph_algorithm
                 hash[novoEstado] = true; // Marca como analisado
                 estadoAtual.Edges.Add(new Tuple<int, Estado<T>>(1, novoEstado)); // Adiciona a aresta com um custo de 1
             }
+            Console.WriteLine(novoVeiculo);
         }
 
         public bool HasBeenAnalysed(Estado<T> estado)
@@ -179,8 +185,9 @@ namespace graph_algorithm
             return heuristica;
         }
 
-        public Estado<T> BuscaGulosa(Tuple<int, int> posicaoSaida)
+        public Estado<T> BuscaGulosa()
         {
+            Tuple<int, int> posicaoSaida = this.end;
             // Fila de prioridade para armazenar os estados a serem explorados
             SortedSet<Tuple<int, Estado<T>>> filaPrioridade = new SortedSet<Tuple<int, Estado<T>>>(Comparer<Tuple<int, Estado<T>>>.Create((x, y) =>
             {
@@ -198,6 +205,15 @@ namespace graph_algorithm
                 // Pega o estado com menor valor heurístico
                 var estadoAtual = filaPrioridade.Min.Item2;
                 filaPrioridade.Remove(filaPrioridade.Min);
+
+                foreach(Veiculo<T> i in estadoAtual.Veiculos)
+                {
+                    if (i.Id.Equals(veiculo_start.Id) && i.Position.Item2 == end.Item2 && i.Position.Item1 == end.Item1)
+                    {
+                        Console.WriteLine("Encontrado");
+                        return estadoAtual;
+                    }
+                }
 
                 // Verifica se o estado atual é o estado final
                 if (estadoAtual.Veiculos.Any(v => v.Position.Equals(posicaoSaida)))
