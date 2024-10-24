@@ -196,29 +196,29 @@ namespace graph_algorithm
             return novoEstado;
         }
 
-        private List<Veiculo<T>> ObterVeiculosBloqueadores(Estado<T> estado, Veiculo<T> carroVermelho)
+        private List<Veiculo<T>> ObterVeiculosBloqueadores(Estado<T> estado, Veiculo<T> carro)
         {
             List<Veiculo<T>> bloqueadores = new List<Veiculo<T>>();
 
-            if (carroVermelho.Diretion == Direction.Horizontal)
+            if (carro.Diretion == Direction.Horizontal)
             {
                 // Verifica bloqueio à direita
-                Veiculo<T> movidoDireita = carroVermelho.MoveHorizontally(1, MoveHorizontal.Direita);
-                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoDireita.HadColision(v)));
+                Veiculo<T> movidoDireita = carro.MoveHorizontally(1, MoveHorizontal.Direita);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carro.Id) && movidoDireita.HadColision(v)));
 
                 // Verifica bloqueio à esquerda
-                Veiculo<T> movidoEsquerda = carroVermelho.MoveHorizontally(1, MoveHorizontal.Esquerda);
-                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoEsquerda.HadColision(v)));
+                Veiculo<T> movidoEsquerda = carro.MoveHorizontally(1, MoveHorizontal.Esquerda);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carro.Id) && movidoEsquerda.HadColision(v)));
             }
             else // Vertical
             {
                 // Verifica bloqueio para baixo
-                Veiculo<T> movidoBaixo = carroVermelho.MoveVertically(1, MoveVertical.Baixo);
-                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoBaixo.HadColision(v)));
+                Veiculo<T> movidoBaixo = carro.MoveVertically(1, MoveVertical.Baixo);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carro.Id) && movidoBaixo.HadColision(v)));
 
                 // Verifica bloqueio para cima
-                Veiculo<T> movidoCima = carroVermelho.MoveVertically(1, MoveVertical.Cima);
-                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoCima.HadColision(v)));
+                Veiculo<T> movidoCima = carro.MoveVertically(1, MoveVertical.Cima);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carro.Id) && movidoCima.HadColision(v)));
             }
 
             return bloqueadores.Distinct().ToList(); // Remove duplicatas
