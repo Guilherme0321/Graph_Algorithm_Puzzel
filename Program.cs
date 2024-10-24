@@ -33,7 +33,7 @@ namespace graph_algorithm
             Estado<int> movedState = new Estado<int>(movedVehicles);
 
             Graph<int> graph = new Graph<int>(movedVehicles, movedVehicles[1], new Tuple<int, int>(2, 9));
-            graph.GerarGrafo();
+            graph.GerarGrafo(2);
             Estado<int> estadofinal = graph.BuscaGulosa();
             foreach (Veiculo<int> item in estadofinal.Veiculos)
             {
@@ -65,7 +65,7 @@ namespace graph_algorithm
             };
         }
 
-        public void GerarGrafo()
+        public void GerarGrafo(T veiculoIdAlvo)
         {
             Queue<Estado<T>> fila = new Queue<Estado<T>>();
             fila.Enqueue(atual);
@@ -74,9 +74,10 @@ namespace graph_algorithm
             {
                 Estado<T> estadoAtual = fila.Dequeue();
 
-                if (estadoAtual.Veiculos.Any(v => v.Position.Equals(end)))
+                // Verifique se o veículo com o ID específico atingiu a posição final
+                if (estadoAtual.Veiculos.Any(v => v.Id.Equals(veiculoIdAlvo) && v.Position.Equals(end)))
                 {
-                    Console.WriteLine("Objetivo atingido!");
+                    Console.WriteLine("Objetivo atingido pelo veículo de ID: " + veiculoIdAlvo);
                     return;
                 }
 
@@ -90,14 +91,24 @@ namespace graph_algorithm
                         Veiculo<T> novoVeiculoEsquerda = veiculo.MoveHorizontally(i, MoveHorizontal.Esquerda);
                         if (IsMovimentoValido(novoVeiculoEsquerda, estadoAtual.Veiculos))
                         {
-                            AtualizarEstado(estadoAtual, novoVeiculoEsquerda);
+                            var novoEstado = AtualizarEstado(estadoAtual, novoVeiculoEsquerda);
+                            if (!hash.ContainsKey(novoEstado))
+                            {
+                                hash[novoEstado] = true; // Marca como analisado
+                                fila.Enqueue(novoEstado);
+                            }
                         }
 
                         // Mover para a direita
                         Veiculo<T> novoVeiculoDireita = veiculo.MoveHorizontally(i, MoveHorizontal.Direita);
                         if (IsMovimentoValido(novoVeiculoDireita, estadoAtual.Veiculos))
                         {
-                            AtualizarEstado(estadoAtual, novoVeiculoDireita);
+                            var novoEstado = AtualizarEstado(estadoAtual, novoVeiculoDireita);
+                            if (!hash.ContainsKey(novoEstado))
+                            {
+                                hash[novoEstado] = true; // Marca como analisado
+                                fila.Enqueue(novoEstado);
+                            }
                         }
                     }
 
@@ -108,20 +119,29 @@ namespace graph_algorithm
                         Veiculo<T> novoVeiculoCima = veiculo.MoveVertically(i, MoveVertical.Cima);
                         if (IsMovimentoValido(novoVeiculoCima, estadoAtual.Veiculos))
                         {
-                            AtualizarEstado(estadoAtual, novoVeiculoCima);
+                            var novoEstado = AtualizarEstado(estadoAtual, novoVeiculoCima);
+                            if (!hash.ContainsKey(novoEstado))
+                            {
+                                hash[novoEstado] = true; // Marca como analisado
+                                fila.Enqueue(novoEstado);
+                            }
                         }
 
                         // Mover para baixo
                         Veiculo<T> novoVeiculoBaixo = veiculo.MoveVertically(i, MoveVertical.Baixo);
                         if (IsMovimentoValido(novoVeiculoBaixo, estadoAtual.Veiculos))
                         {
-                            AtualizarEstado(estadoAtual, novoVeiculoBaixo);
+                            var novoEstado = AtualizarEstado(estadoAtual, novoVeiculoBaixo);
+                            if (!hash.ContainsKey(novoEstado))
+                            {
+                                hash[novoEstado] = true; // Marca como analisado
+                                fila.Enqueue(novoEstado);
+                            }
                         }
                     }
                 }
             }
         }
-
         private bool IsMovimentoValido(Veiculo<T> veiculo, List<Veiculo<T>> outrosVeiculos)
         {
             // Verifica se a nova posição do veículo é válida (não sai da matriz, não colide com outros veículos)
@@ -141,20 +161,31 @@ namespace graph_algorithm
             return true;
         }
 
-        private void AtualizarEstado(Estado<T> estadoAtual, Veiculo<T> novoVeiculo)
+        private Estado<T> AtualizarEstado(Estado<T> estadoAtual, Veiculo<T> novoVeiculo)
         {
-            // Cria um novo estado baseado no estado atual, substituindo o veículo movido
-            Estado<T> novoEstado = new Estado<T>(estadoAtual.Veiculos);
-            novoEstado.setVeiculoAt(estadoAtual.Veiculos.IndexOf(novoVeiculo), novoVeiculo);
+            // Clone a lista de veículos do estado atual
+            List<Veiculo<T>> novosVeiculos = estadoAtual.Veiculos.Select(v => v.Clone()).ToList();
 
-            // Adiciona a nova aresta e verifica se já foi analisada
-            if (!hash.ContainsKey(novoEstado))
+            // Encontre o veículo que precisa ser atualizado
+            for (int i = 0; i < novosVeiculos.Count; i++)
             {
-                hash[novoEstado] = true; // Marca como analisado
-                estadoAtual.Edges.Add(new Tuple<int, Estado<T>>(1, novoEstado)); // Adiciona a aresta com um custo de 1
+                if (novosVeiculos[i].Id.Equals(novoVeiculo.Id))
+                {
+                    // Atualize a posição do veículo
+                    novosVeiculos[i] = novoVeiculo;
+                    break;
+                }
             }
-            Console.WriteLine(novoVeiculo);
+
+            // Crie um novo estado com a lista atualizada de veículos
+            Estado<T> novoEstado = new Estado<T>(novoVeiculo, novosVeiculos);
+
+            // Adicione as arestas ao novo estado, se necessário
+            // (Dependendo da lógica do seu algoritmo, talvez você queira adicionar as arestas aqui)
+
+            return novoEstado;
         }
+
 
         public bool HasBeenAnalysed(Estado<T> estado)
         {
