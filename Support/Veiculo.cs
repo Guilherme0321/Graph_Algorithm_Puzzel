@@ -116,6 +116,29 @@ namespace graph_algorithm.Support {
             return new Veiculo<T>(id, pos.Item1, pos.Item2, length, direction, isObstacle);
         }
 
+        private bool Equal(Veiculo<T> obj)
+        {
+            return this.id.Equals(obj.id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
+            return Equal((Veiculo<T>)obj);
+        }
+
+        public static bool operator ==(Veiculo<T> i, Veiculo<T> j)
+        {
+            if (ReferenceEquals(i, null) && ReferenceEquals(j, null)) return true;
+            if (ReferenceEquals(i, null) || ReferenceEquals(j, null)) return false;
+            return i.Equals(j);
+        }
+
+        public static bool operator !=(Veiculo<T> i, Veiculo<T> j)
+        {
+            return !(i == j);
+        }
+
         public override string ToString()
         {
             return $"{{ {id}, <{pos.Item1},{pos.Item2}>, {direction}, {length} }}";
