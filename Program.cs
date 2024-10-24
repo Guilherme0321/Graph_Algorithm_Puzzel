@@ -196,6 +196,33 @@ namespace graph_algorithm
             return novoEstado;
         }
 
+        private List<Veiculo<T>> ObterVeiculosBloqueadores(Estado<T> estado, Veiculo<T> carroVermelho)
+        {
+            List<Veiculo<T>> bloqueadores = new List<Veiculo<T>>();
+
+            if (carroVermelho.Diretion == Direction.Horizontal)
+            {
+                // Verifica bloqueio à direita
+                Veiculo<T> movidoDireita = carroVermelho.MoveHorizontally(1, MoveHorizontal.Direita);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoDireita.HadColision(v)));
+
+                // Verifica bloqueio à esquerda
+                Veiculo<T> movidoEsquerda = carroVermelho.MoveHorizontally(1, MoveHorizontal.Esquerda);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoEsquerda.HadColision(v)));
+            }
+            else // Vertical
+            {
+                // Verifica bloqueio para baixo
+                Veiculo<T> movidoBaixo = carroVermelho.MoveVertically(1, MoveVertical.Baixo);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoBaixo.HadColision(v)));
+
+                // Verifica bloqueio para cima
+                Veiculo<T> movidoCima = carroVermelho.MoveVertically(1, MoveVertical.Cima);
+                bloqueadores.AddRange(estado.Veiculos.Where(v => !v.Id.Equals(carroVermelho.Id) && movidoCima.HadColision(v)));
+            }
+
+            return bloqueadores.Distinct().ToList(); // Remove duplicatas
+        }
 
         public Estado<T> HasBeenAnalysed(Estado<T> estado)
         {
