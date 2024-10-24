@@ -13,7 +13,7 @@ namespace graph_algorithm.Support
         Horizontal
     }
 
-    class Estado<T>
+    public class Estado<T>
     {
         private Veiculo<T>? movedVeiculo;
         private List<Veiculo<T>> veiculos;
