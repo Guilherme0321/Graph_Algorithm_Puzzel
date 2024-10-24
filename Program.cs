@@ -8,29 +8,30 @@ namespace graph_algorithm
     {
         static void Main(string[] args)
         {
+            
             List<Veiculo<int>> movedVehicles = new List<Veiculo<int>>() {
-                new Veiculo<int>(1, 3, 1, 1, Direction.Vertical, false),
-                new Veiculo<int>(2, 2, 0, 1, Direction.Vertical, false),
-                new Veiculo<int>(3, 2, 1, 1, Direction.Horizontal, false),
-                new Veiculo<int>(4, 3, 0, 1, Direction.Horizontal, true),
-                new Veiculo<int>(5, 3, 3, 2, Direction.Vertical, false),
-                new Veiculo<int>(6, 1, 4, 1, Direction.Horizontal, false),
-                new Veiculo<int>(7, 5, 5, 1, Direction.Horizontal, true),
-                new Veiculo<int>(8, 2, 7, 1, Direction.Vertical, false),
-                new Veiculo<int>(9, 4, 6, 1, Direction.Vertical, false),
-                new Veiculo<int>(10, 4, 5, 1, Direction.Horizontal, false),
-                new Veiculo<int>(11, 4, 0, 2, Direction.Vertical, false),
-                new Veiculo<int>(12, 3, 9, 2, Direction.Vertical, false),
-                new Veiculo<int>(13, 2, 6, 2, Direction.Vertical, false),
-                new Veiculo<int>(14, 1, 5, 2, Direction.Horizontal, false),
-                new Veiculo<int>(15, 1, 7, 1, Direction.Vertical, false),
-                new Veiculo<int>(16, 2, 9, 1, Direction.Vertical, false),
-                new Veiculo<int>(17, 1, 9, 1, Direction.Horizontal, true),
-                new Veiculo<int>(18, 0, 1, 3, Direction.Horizontal, false),
-                new Veiculo<int>(19, 1, 0, 3, Direction.Horizontal, false),
-                new Veiculo<int>(20, 5, 6, 3, Direction.Horizontal, false) 
+            new Veiculo<int>(1, 3, 1, 1, Direction.Horizontal, false),
+            new Veiculo<int>(2, 2, 0, 1, Direction.Horizontal, false),
+            new Veiculo<int>(3, 2, 1, 1, Direction.Vertical, false),
+            new Veiculo<int>(4, 3, 0, 1, Direction.Horizontal, true),
+            new Veiculo<int>(5, 3, 3, 2, Direction.Vertical, false),
+            new Veiculo<int>(6, 1, 4, 1, Direction.Horizontal, false),
+            new Veiculo<int>(7, 5, 5, 1, Direction.Horizontal, true),
+            new Veiculo<int>(8, 2, 7, 1, Direction.Vertical, false),
+            new Veiculo<int>(9, 4, 6, 1, Direction.Vertical, false),
+            new Veiculo<int>(10, 4, 5, 1, Direction.Horizontal, false),
+            new Veiculo<int>(11, 4, 0, 2, Direction.Vertical, false),
+            new Veiculo<int>(12, 3, 9, 2, Direction.Vertical, false),
+            new Veiculo<int>(13, 2, 6, 2, Direction.Vertical, false),
+            new Veiculo<int>(14, 1, 5, 2, Direction.Vertical, false),
+            new Veiculo<int>(15, 1, 7, 1, Direction.Vertical, false),
+            new Veiculo<int>(16, 2, 9, 1, Direction.Vertical, false),
+            new Veiculo<int>(17, 1, 9, 1, Direction.Horizontal, true),
+            new Veiculo<int>(18, 0, 1, 3, Direction.Horizontal, false),
+            new Veiculo<int>(19, 1, 0, 3, Direction.Horizontal, false),
+            new Veiculo<int>(20, 5, 6, 3, Direction.Horizontal, false)
             };
-            Estado<int> movedState = new Estado<int>(movedVehicles);
+                Estado<int> movedState = new Estado<int>(movedVehicles);
 
             Graph<int> graph = new Graph<int>(movedVehicles, movedVehicles[1], new Tuple<int, int>(2, 9));
             graph.GerarGrafo(2);
