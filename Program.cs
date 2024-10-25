@@ -11,33 +11,33 @@ namespace graph_algorithm
         static void Main(string[] args)
         {
 
-            List<Veiculo<int>> movedVehicles = new List<Veiculo<int>>() {
-            new Veiculo<int>(1, 3, 1, 1, Direction.Horizontal, false),
-            new Veiculo<int>(2, 2, 0, 1, Direction.Horizontal, false),
-            new Veiculo<int>(3, 2, 1, 1, Direction.Vertical, false),
-            new Veiculo<int>(4, 3, 0, 1, Direction.Horizontal, true),
-            new Veiculo<int>(5, 3, 3, 2, Direction.Vertical, false),
-            new Veiculo<int>(6, 1, 4, 1, Direction.Horizontal, false),
-            new Veiculo<int>(7, 5, 5, 1, Direction.Horizontal, true),
-            new Veiculo<int>(8, 2, 7, 1, Direction.Vertical, false),
-            new Veiculo<int>(9, 4, 6, 1, Direction.Vertical, false),
-            new Veiculo<int>(10, 4, 5, 1, Direction.Horizontal, false),
-            new Veiculo<int>(11, 4, 0, 2, Direction.Vertical, false),
-            new Veiculo<int>(12, 3, 9, 2, Direction.Vertical, false),
-            new Veiculo<int>(13, 2, 6, 2, Direction.Vertical, false),
-            new Veiculo<int>(14, 1, 5, 2, Direction.Vertical, false),
-            new Veiculo<int>(15, 1, 7, 1, Direction.Vertical, false),
-            new Veiculo<int>(16, 2, 9, 1, Direction.Vertical, false),
-            new Veiculo<int>(17, 1, 9, 1, Direction.Horizontal, true),
-            new Veiculo<int>(18, 0, 1, 3, Direction.Horizontal, false),
-            new Veiculo<int>(19, 1, 0, 3, Direction.Horizontal, false),
-            new Veiculo<int>(20, 5, 6, 3, Direction.Horizontal, false)
+            List<Veiculo> movedVehicles = new List<Veiculo>() {
+            new Veiculo("1", 3, 1, 1, Direction.Horizontal, false),
+            new Veiculo("2", 2, 0, 1, Direction.Horizontal, false),
+            new Veiculo("3", 2, 1, 1, Direction.Vertical, false),
+            new Veiculo("4", 3, 0, 1, Direction.Horizontal, true),
+            new Veiculo("5", 3, 3, 2, Direction.Vertical, false),
+            new Veiculo("6", 1, 4, 1, Direction.Horizontal, false),
+            new Veiculo("7", 5, 5, 1, Direction.Horizontal, true),
+            new Veiculo("8", 2, 7, 1, Direction.Vertical, false),
+            new Veiculo("9", 4, 6, 1, Direction.Vertical, false),
+            new Veiculo("10", 4, 5, 1, Direction.Horizontal, false),
+            new Veiculo("11", 4, 0, 2, Direction.Vertical, false),
+            new Veiculo("12", 3, 9, 2, Direction.Vertical, false),
+            new Veiculo("13", 2, 6, 2, Direction.Vertical, false),
+            new Veiculo("14", 1, 5, 2, Direction.Horizontal, false),
+            new Veiculo("15", 1, 7, 1, Direction.Vertical, false),
+            new Veiculo("16", 2, 9, 1, Direction.Vertical, false),
+            new Veiculo("17", 1, 9, 1, Direction.Horizontal, true),
+            new Veiculo("18", 0, 1, 3, Direction.Horizontal, false),
+            new Veiculo("19", 1, 0, 3, Direction.Horizontal, false),
+            new Veiculo("20", 5, 6, 3, Direction.Horizontal, false)
             };
-            Estado<int> movedState = new Estado<int>(movedVehicles);
+            Estado movedState = new Estado(movedVehicles);
 
-            Graph<int> graph = new Graph<int>(movedState.Veiculos[1]);
-            Estado<int> estadofinal = graph.GerarGrafo(movedState, Tuple.Create(2,9));
-            foreach (Veiculo<int> item in estadofinal.Veiculos)
+            Graph graph = new Graph(movedState.Veiculos[1]);
+            Estado estadofinal = graph.GerarGrafo(movedState, Tuple.Create(2,9));
+            foreach (Veiculo item in estadofinal.Veiculos)
             {
                 Console.WriteLine(item);
             }
@@ -45,28 +45,29 @@ namespace graph_algorithm
     }
 
 
-    public class Graph<T>
+    public class Graph
     {
-        private Dictionary<Estado<T>, Estado<T>> hash; // Armazena estados já processados
-        private Veiculo<T> veiculo_start; // Veículo 2, o veículo principal
-        public Graph(Veiculo<T> veiculo_start)
+        private Dictionary<Estado, Estado> hash; // Armazena estados já processados
+        private Veiculo veiculo_start; // Veículo 2, o veículo principal
+        public Graph(Veiculo veiculo_start)
         {
             this.veiculo_start = veiculo_start;
-            this.hash = new Dictionary<Estado<T>, Estado<T>>();
+            this.hash = new Dictionary<Estado, Estado>();
         }
 
-        public Estado<T> GerarGrafo(Estado<T> estadoInicial, Tuple<int, int> posicaoSaida)
+        public Estado GerarGrafo(Estado estadoInicial, Tuple<int, int> posicaoSaida)
         {
-            var filaPrioridade = new SortedSet<Tuple<int, Estado<T>>>(); // Fila de prioridade com heurística
-            filaPrioridade.Add(new Tuple<int, Estado<T>>(0, estadoInicial));
+            var filaPrioridade = new MinHeap(); // Fila de prioridade com heurística
+            filaPrioridade.Insert(new Tuple<int, Estado>(0, estadoInicial));
 
-            while (filaPrioridade.Any())
+            while (!filaPrioridade.IsEmpty())
             {
-                var estadoAtual = filaPrioridade.First().Item2; // Pega o estado com menor heurística
-                filaPrioridade.Remove(filaPrioridade.First());
-
+                var estadoAtual = filaPrioridade.Peek().Item2; // Pega o estado com menor heurística
+                var heuristica = filaPrioridade.ExtractMin().Item1;
                 // Pega o veículo 2 (ID do veículo alvo) para verificar se ele atingiu a posição final
                 var veiculo2 = estadoAtual.Veiculos[1];
+
+                Console.WriteLine($"{estadoAtual.Veiculos[1]} {heuristica}");
 
                 // Verificação das coordenadas do veículo 2
                 if (veiculo2 == null)
@@ -96,14 +97,14 @@ namespace graph_algorithm
                         if (veiculo.Diretion == Direction.Horizontal)
                         {
                             // Mover para a esquerda
-                            Veiculo<T> novoVeiculoEsquerda = veiculo.MoveHorizontally(i, MoveHorizontal.Esquerda);
+                            Veiculo novoVeiculoEsquerda = veiculo.MoveHorizontally(i, MoveHorizontal.Esquerda);
                             if (IsMovimentoValido(novoVeiculoEsquerda, estadoAtual.Veiculos))
                             {
                                 AtualizarEstado(estadoAtual, novoVeiculoEsquerda, posicaoSaida, filaPrioridade);
                             }
 
                             // Mover para a direita
-                            Veiculo<T> novoVeiculoDireita = veiculo.MoveHorizontally(i, MoveHorizontal.Direita);
+                            Veiculo novoVeiculoDireita = veiculo.MoveHorizontally(i, MoveHorizontal.Direita);
                             if (IsMovimentoValido(novoVeiculoDireita, estadoAtual.Veiculos))
                             {
                                 AtualizarEstado(estadoAtual, novoVeiculoDireita, posicaoSaida, filaPrioridade);
@@ -113,14 +114,14 @@ namespace graph_algorithm
                         else if (veiculo.Diretion == Direction.Vertical)
                         {
                             // Mover para cima
-                            Veiculo<T> novoVeiculoCima = veiculo.MoveVertically(i, MoveVertical.Cima);
+                            Veiculo novoVeiculoCima = veiculo.MoveVertically(i, MoveVertical.Cima);
                             if (IsMovimentoValido(novoVeiculoCima, estadoAtual.Veiculos))
                             {
                                 AtualizarEstado(estadoAtual, novoVeiculoCima, posicaoSaida, filaPrioridade);
                             }
 
                             // Mover para baixo
-                            Veiculo<T> novoVeiculoBaixo = veiculo.MoveVertically(i, MoveVertical.Baixo);
+                            Veiculo novoVeiculoBaixo = veiculo.MoveVertically(i, MoveVertical.Baixo);
                             if (IsMovimentoValido(novoVeiculoBaixo, estadoAtual.Veiculos))
                             {
                                 AtualizarEstado(estadoAtual, novoVeiculoBaixo, posicaoSaida, filaPrioridade);
@@ -135,10 +136,10 @@ namespace graph_algorithm
         }
 
 
-        private void AtualizarEstado(Estado<T> estadoAtual, Veiculo<T> novoVeiculo, Tuple<int, int> posicaoSaida, SortedSet<Tuple<int, Estado<T>>> filaPrioridade)
+        private void AtualizarEstado(Estado estadoAtual, Veiculo novoVeiculo, Tuple<int, int> posicaoSaida, MinHeap filaPrioridade)
         {
             // Atualiza o estado com o novo veículo
-            List<Veiculo<T>> novosVeiculos = estadoAtual.Veiculos.Select(v => v.Clone()).ToList();
+            List<Veiculo> novosVeiculos = estadoAtual.Veiculos.Select(v => v.Clone()).ToList();
 
             // Substitua o veículo na lista clonada
             int index = novosVeiculos.FindIndex(v => v.Id.Equals(novoVeiculo.Id));
@@ -147,17 +148,17 @@ namespace graph_algorithm
                 novosVeiculos[index] = novoVeiculo;
             }
 
-            Estado<T> novoEstado = new Estado<T>(novosVeiculos);
+            Estado novoEstado = new Estado(novosVeiculos);
 
             if (!hash.ContainsKey(novoEstado))
             {
                 hash[novoEstado] = novoEstado; // Marca como analisado
                 int heuristica = CalcularHeuristica(veiculo_start, novosVeiculos, posicaoSaida);
-                filaPrioridade.Add(new Tuple<int, Estado<T>>(heuristica, novoEstado)); // Adiciona o novo estado com sua heurística
+                filaPrioridade.Insert(new Tuple<int, Estado>(heuristica, novoEstado)); // Adiciona o novo estado com sua heurística
             }
         }
 
-        private int CalcularHeuristica(Veiculo<T> veiculo2, List<Veiculo<T>> veiculos, Tuple<int, int> posicaoSaida)
+        private int CalcularHeuristica(Veiculo veiculo2, List<Veiculo> veiculos, Tuple<int, int> posicaoSaida)
         {
             // A heurística agora será baseada na distância de Manhattan do veículo 2 para a posição de saída
             // e no número de veículos que bloqueiam diretamente o caminho dele
@@ -170,7 +171,7 @@ namespace graph_algorithm
             return distancia + bloqueios * 10; // Penalizar mais veículos bloqueando o caminho
         }
 
-        private bool BloqueiaVeiculo2(Veiculo<T> veiculo, Veiculo<T> veiculo2, Tuple<int, int> posicaoSaida)
+        private bool BloqueiaVeiculo2(Veiculo veiculo, Veiculo veiculo2, Tuple<int, int> posicaoSaida)
         {
             // Verifica se o veículo está diretamente bloqueando o veículo 2
             if (veiculo.Diretion == Direction.Horizontal)
@@ -188,7 +189,7 @@ namespace graph_algorithm
             return false;
         }
 
-        private bool IsMovimentoValido(Veiculo<T> novoVeiculo, List<Veiculo<T>> veiculos)
+        private bool IsMovimentoValido(Veiculo novoVeiculo, List<Veiculo> veiculos)
         {
             // Verifica se o movimento é válido (sem colisões e dentro dos limites)
             foreach (var veiculo in veiculos)
