@@ -236,8 +236,8 @@ public class RushHourSolver
             new Vehicle(9, 2, false, 1, VehicleType.CarO),
             new Vehicle(9, 1, true, 1, VehicleType.CarP),
             new Vehicle(1, 0, true, 3, VehicleType.CarQ),
-            new Vehicle(0, 1, true, 3, VehicleType.CarR),
-            new Vehicle(6, 5, true, 3, VehicleType.CarS)
+            new Vehicle(0, 1, true, 3, VehicleType.CarS),
+            new Vehicle(6, 5, true, 3, VehicleType.CarT)
         };
         /*
             new Vehicle(0, 2, true, 2, VehicleType.RedCar, true),
@@ -472,7 +472,7 @@ public class Program
             var initialState = RushHourSolver.CreateInitialState();
 
             //Console.WriteLine("Initial state:");
-            //Console.WriteLine(initialState.GetBoardState());
+            Console.WriteLine(initialState.GetBoardState());
 
             //Console.WriteLine("Solving puzzle...");
             SolutionPath solution = solver.SolveGame(initialState);
